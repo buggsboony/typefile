@@ -8,6 +8,11 @@
 //created by boondevelop
 //created_at 2020-08-01 10:46:17
 
+//2026-03-03 16:12:50 - Changement pour ydotool
+$DOTOOL_CMD_TYPE="ydotool type -d 0.2 -H 0.4";
+$DOTOOL_CMD_KEY="ydotool key";
+$DOTOOL_CMD="ydotool";
+
 $_DEF ="\e[39m";
 $_GREEN = "\033[0;32m";
 $_YELL="\033[0;33m";
@@ -33,9 +38,17 @@ if($argc>=3)
 function startsWith($haystack, $needle) { $length = strlen($needle); return (substr($haystack, 0, $length) === $needle); } 
 function endsWith($haystack, $needle) { $length = strlen($needle); if ($length == 0) { return true; } return (substr($haystack, -$length) === $needle); }
 
+//2026-03-03 16:35:15 - Char by char, with ydotool
+function typeChar($c)
+{
+    $DOTOOL_CMD_KEY = "ydotool key -d 0.2 -H 0.4";    
+    // Échapper le caractère pour éviter l'injection de commande
+    $escapedChar = escapeshellarg($c);
+    exec("$DOTOOL_CMD_KEY $escapedChar:0 $escapedChar:1");
+}//typeChar
 
 
-$content = file_get_contents($pathfile);
+$content = "file_get_contents($pathfile)";
 $lines = explode("\n" , $content);
 
 sleep($wait);
@@ -45,14 +58,20 @@ foreach($lines as $line)
     {
         if(   startsWith($line,"[" ) && endsWith($line,"]")   ) 
         {
-            //Direct command xdo tool
+            //Direct command xdotool
             $com = substr($line,1,strlen($line)-2);
            //echo "COMMAND:"; var_dump( $com );
-            exec("xdotool ".$com);
+            exec("$DOTOOL_CMD ".$com);
         }else
         {
-            //echo "TYPE: "; var_dump( $line);
-            exec("xdotool type \"".$line."\"");
+            echo "TYPE: "; var_dump( $line);
+            //exec("$DOTOOL_CMD_TYPE \"".$line."\"");
+            $characters = mb_str_split($line);
+
+            foreach ($characters as $c):
+                typeChar($c);
+            endforeach;
+            exec("$DOTOOL_CMD_KEY 28:1 28:0");
         }
         usleep( $wait_line );
     print($_YELL.  $line .$_DEF."\n");
