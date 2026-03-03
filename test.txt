@@ -1,0 +1,29 @@
+//2026-03-03 19:29:38 - Texte example
+Ceci est un fichier Text!
+avec des retours à la ligne.
+Nous ne savons pas où aller
+50% dechance qu'un hôte coûte 30€ ou 26£
+2*3=6
+Mais aussi des portions de codes Comme #!/bin/bash
+Pense au under_score
+
+4µ ça fait très petit !!
+
+
+#Bash
+sudo nano /home/xxx/.bashrc
+
+
+
+//2026-03-03 19:29:20 - Some PHP
+$var=@$_REQUEST['arg']?:null;
+
+echo "done."
+
+
+//2026-03-03 19:29:28 - JS example
+function fn()
+{
+    console.log('test');
+    console.warn(`big text`);
+}

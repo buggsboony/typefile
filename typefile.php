@@ -66,31 +66,81 @@ function getSeqOnOff($code)
     define("KEY_8", 9); //\
     define("KEY_9", 10); //^
     define("KEY_0", 11); //@   
-    define("KEY_MINUS", 12); //]   
+    define("KEY_MINUS", 12); //]
 
-    define("KEY_SLASH", 53);
- 
-    
-$content = "]!";
+    define("KEY_E", 18); //e  
+    define("KEY_M", 50); //,
+    define("KEY_COMMA", 51); //;
+    define("KEY_SLASH", 53); 
+    define("KEY_SPACE", 57); //SPACE
+    define("KEY_APOSTROPHE", 40); //ù et %
+    define("KEY_RIGHTBRACE", 27); //$
+    define("KEY_BACKSLASH", 43); //* et µ
+
+    define("VK_TAB",15);
+    define("VK_RETURN",28);    
+
+
+
+
+            
+        
+        // ô
+        // ç
+        // '
+        // .
+        // "
+        // '
+        
+        // =
+        
+        // }
+        
+        
+        // €
+        // £
+
+
+    //2026-03-03 19:41:05 - Obtenir une séquence
 function getCharSeq($c)
 {
     
     $seq = "";
-    if($c==":")  {$seq = getSeqOnOff(KEY_COLON);                                                      }
+    if($c=="ù")  {$seq = getSeqOnOff(KEY_APOSTROPHE);   }
+    if($c=="%")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_RIGHTBRACE)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
+    
+    if($c=="*")  {$seq = getSeqOnOff(KEY_BACKSLASH);    }
+    if($c=="µ")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_BACKSLASH)." ".getSeqOff(KEY_SHIFT_LEFT);        }
+
+    if($c==":")  {$seq = getSeqOnOff(KEY_COLON);    }
+    if($c==" ")  {$seq = getSeqOnOff(KEY_SPACE);    }
+    if($c=="_")  {$seq = getSeqOnOff(KEY_8);    }
     if($c=="/")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_COLON)." ".getSeqOff(KEY_SHIFT_LEFT);        }
     if($c=="!")  {$seq = getSeqOnOff(KEY_SLASH);                                                      }
-    if($c=="§")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_SLASH)." ".getSeqOff(KEY_SHIFT_LEFT);        }
+    if($c==";")  {$seq = getSeqOnOff(KEY_COMMA);                                                      }
+    if($c==",")  {$seq = getSeqOnOff(KEY_M); }
+    if($c=="?")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_M)." ".getSeqOff(KEY_SHIFT_LEFT);        }    
+    if($c=="£")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_RIGHTBRACE)." ".getSeqOff(KEY_SHIFT_LEFT);        }        
+    if($c=="§")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_SLASH)." ".getSeqOff(KEY_SHIFT_LEFT);        }    
     
     if($c=="~") {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_2)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="#")  {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_3)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="{")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_4)." ".getSeqOff(KEY_RIGHTALT);         }
+    if($c=="(")  {$seq = getSeqOnOff(KEY_5);    }
     if($c=="[")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_5)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="|")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_6)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="`")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_7)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="\\")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_8)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="^")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_9)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="@")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_0)." ".getSeqOff(KEY_RIGHTALT);         }
+    if($c==")")  {$seq = getSeqOnOff(KEY_MINUS);    }    
     if($c=="]")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_MINUS)." ".getSeqOff(KEY_RIGHTALT);     }
+
+    if($c=="€")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_E)." ".getSeqOff(KEY_RIGHTALT);         }
+
+    //2026-03-03 19:19:36 - Virtual keys
+    if($c=="\n") {$seq = getSeqOnOff(VK_RETURN);}
+    if($c=="\t") {$seq = getSeqOnOff(VK_TAB);}
     
     if( !$seq )
     {
@@ -106,8 +156,9 @@ function typeChar($c) {
     $DOTOOL_CMD_KEY = "ydotool key";
     
     $seq = getCharSeq($c);
-    echo("[".$DOTOOL_CMD_KEY." ".$seq."]\r\n");
-    //echo "[TEST]";   
+    echo("[".$DOTOOL_CMD_KEY." ".$seq."]\r\n");    
+        // Taper le symbole
+    exec($DOTOOL_CMD_KEY." ".$seq);
 }
 
 
@@ -115,10 +166,10 @@ function typeChar($c) {
 
 function typeString($str) {
     var_dump("type string disabled");
-    // $DOTOOL_CMD_TYPE = "ydotool type -d 0.2 -H 0.4";
+    $DOTOOL_CMD_TYPE = "ydotool type -d 0.2 -H 0.4";
 
-    // // Taper la chaîne
-    // exec("$DOTOOL_CMD_TYPE " . escapeshellarg($str));
+    // Taper la chaîne
+    exec("$DOTOOL_CMD_TYPE " . escapeshellarg($str));
 }
 
 function processContent($content) {
@@ -149,43 +200,10 @@ function processContent($content) {
 }
 
 // Exemple de contenu à traiter
-//$content = "#!/bin/bash";
-
-processContent($content); 
  
 
-
-// $content = file_get_contents($pathfile);
-// $content="A";
-// $lines = explode("\n" , $content);
-
-// sleep($wait);
-// foreach($lines as $line)
-// {
-//     if( $line)
-//     {
-//         if(   startsWith($line,"[" ) && endsWith($line,"]")   ) 
-//         {
-//             //Direct command xdotool
-//             $com = substr($line,1,strlen($line)-2);
-//            //echo "COMMAND:"; var_dump( $com );
-//             exec("$DOTOOL_CMD ".$com);
-//         }else
-//         {
-//             echo "TYPE: "; var_dump( $line);
-//             //exec("$DOTOOL_CMD_TYPE \"".$line."\"");
-//             $characters = mb_str_split($line);
-
-//             foreach ($characters as $c):
-//                 typeChar($c);
-//             endforeach;
-//             exec("$DOTOOL_CMD_KEY 28:1 28:0");
-//         }
-//         usleep( $wait_line );
-//     print($_YELL.  $line .$_DEF."\n");
-
-//     }
-// }//next line
-
+$content = file_get_contents($pathfile);
+sleep(3);
+processContent($content);              
 
 ?>
