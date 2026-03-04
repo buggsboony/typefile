@@ -16,10 +16,10 @@ if [ $? -eq 0 ]; then
     rm -f $tmpfile;
     # Demander une confirmation à l'utilisateur
     if zenity --question --text="Êtes-vous sûr de vouloir continuer ?" --width=300; then
-        echo $input>$tmpfile
-        typefile $tmpfile;
+        echo "$input" > "$tmpfile"
+        typefile "$tmpfile";
         echo "Action effectuée."
-        rm -f $tmpfile;
+        #rm -f $tmpfile;
     else
         echo "Action annulée."
     fi
