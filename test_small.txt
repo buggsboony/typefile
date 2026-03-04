@@ -1,1 +1,3 @@
-ç  cédille
+&amp;
+%Y-%m-%d %X
+<storng></strong>

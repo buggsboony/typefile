@@ -1,6 +1,8 @@
 #!/bin/env php
 <?php
 
+//2026-03-03 22:07:11 - Déboggage : 
+//sleep 3;sudo evtest   
 
 # xdotool key list
 #https://gitlab.com/cunidev/gestures/-/wikis/xdotool-list-of-key-codes
@@ -53,10 +55,11 @@ function getSeqOnOff($code)
 
 
     define("KEY_SHIFT_LEFT",42);
+    define("KEY_SHIFT_RIGHT",54);
     define("KEY_COLON", 52);
     define("KEY_LEFTALT",56);
     define("KEY_RIGHTALT",100);  //ALT_GR    
-    define("KEY_1", 1);
+    define("KEY_1", 2);
     define("KEY_2", 3);
     define("KEY_3", 4);  //#  
     define("KEY_4", 5);  //{
@@ -67,10 +70,11 @@ function getSeqOnOff($code)
     define("KEY_9", 10); //^
     define("KEY_0", 11); //@   
     define("KEY_MINUS", 12); //]
-    define("KEY_EQUAL", 13); //=
+    define("KEY_EQUAL", 13); // = et +
     define("KEY_E", 18); //e  
     define("KEY_O", 24); //o
     
+    define("KEY_GRAVE", 41); //²    
     define("KEY_M", 50); //,
     define("KEY_COMMA", 51); //;
     define("KEY_SLASH", 53); 
@@ -78,36 +82,36 @@ function getSeqOnOff($code)
     define("KEY_APOSTROPHE", 40); //ù et %
     define("KEY_RIGHTBRACE", 27); //$
     define("KEY_BACKSLASH", 43); //* et µ
+    define("KEY_102ND", 86); //< et >
 
     define("VK_TAB",15);
-    define("VK_RETURN",28);    
-
-   
-    
-    //Derniers bugs
-        // -
-        // ç
-//         Oups, char '�' ord=195 not found in sequences 
-// [ydotool key ]
-// Oups, char '�' ord=169 not found in sequences 
-
+    define("VK_RETURN",28);           
+  
 
     //2026-03-03 19:41:05 - Obtenir une séquence
 function getCharSeq($c)
 {
     $value = ord($c);
     $seq = "";
-    if($c=="ç")  {
-        echo "C Cédille!\r\n";
-        exit;
-        $seq = getSeqOnOff(KEY_9);   }
+    if($c=="à")  {  $seq = getSeqOnOff(KEY_0);  }
+    if($c=="&")  {  $seq = getSeqOnOff(KEY_1);  }
+    if($c=="é")  {  $seq = getSeqOnOff(KEY_2);  }
+    if($c=="²")  {  $seq = getSeqOnOff(KEY_GRAVE);  }
+    
+    if($c=="ç")  {  $seq = getSeqOnOff(KEY_9);  }
+    if($c=="è")  {  $seq = getSeqOnOff(KEY_7);  }
+    if($c=="-")  {  $seq = getSeqOnOff(KEY_6);  }
     if($c=="'")  {$seq = getSeqOnOff(KEY_4);   }    
     if($c==".")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_COMMA)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
-    if($c=="\"")  {$seq = getSeqOnOff(KEY_3);   }
+    if($c=="\"") {$seq = getSeqOnOff(KEY_3);   }
     if($c=="=")  {$seq = getSeqOnOff(KEY_EQUAL);   }
+    
+    if($c=="+")  {$seq = getSeqOn(KEY_SHIFT_RIGHT)." ".getSeqOnOff(KEY_EQUAL)." ".getSeqOff(KEY_SHIFT_RIGHT);}
     if($c=="ù")  {$seq = getSeqOnOff(KEY_APOSTROPHE);   }
+    if($c=="<")  {$seq = getSeqOnOff(KEY_102ND);   }
+    if($c==">")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_102ND)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
      
-    if($c=="%")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_RIGHTBRACE)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
+    if($c=="%")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_APOSTROPHE)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
     
     if($c=="*")  {$seq = getSeqOnOff(KEY_BACKSLASH);    }
     if($c=="µ")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_BACKSLASH)." ".getSeqOff(KEY_SHIFT_LEFT);        }
@@ -176,13 +180,14 @@ function typeString($str) {
     exec("$DOTOOL_CMD_TYPE " . escapeshellarg($str));
 }
 
-function processContent($content) {
-    // Initialiser une chaîne temporaire pour collecter des caractères alphanumériques
-    $temp = '';
 
-    for ($i = 0; $i < strlen($content); $i++) {
-        $c = $content[$i];
-            //echo "[$c]"; 
+function processContent($content) {
+    $temp = '';
+    $length = mb_strlen($content); // Utiliser mb_strlen pour gérer les caractères multibyte
+
+    for ($i = 0; $i < $length; $i++) {
+        $c = mb_substr($content, $i, 1); // Utiliser mb_substr pour gérer les caractères multibyte
+
         // Vérifier si le caractère est alphanumérique
         if (ctype_alnum($c) || $c === '_') {
             $temp .= $c; // Ajouter à la chaîne temporaire
@@ -195,12 +200,12 @@ function processContent($content) {
             // Traiter le caractère spécial individuellement
             typeChar($c);
         }
-     }
+    }
 
-    // // Vérifier si la chaîne temporaire a encore des caractères à taper à la fin
-    // if ($temp !== '') {
-    //     typeString($temp);
-    // }
+    // Vérifier si la chaîne temporaire a encore des caractères à taper à la fin
+    if ($temp !== '') {
+        typeString($temp);
+    }
 }
 
 // Exemple de contenu à traiter
