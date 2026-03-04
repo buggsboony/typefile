@@ -22,8 +22,10 @@ LGREEN='\033[38;5;6m'
 BGREEN='\033[1;32m'
 
 #install stuff
-what=${PWD##*/}   
+what=${PWD##*/}
+what2=typetext
 extension=.php
+extension2=.sh
 #peut être extension vide
 
 
@@ -51,6 +53,8 @@ sudo ./install.sh
 
 echo "Set executable..."
 chmod +x $what$extension
+chmod +x $what2$extension2
 #echo "lien symbolique vers usr bin"
 sudo ln -s "$PWD/$what$extension" /usr/bin/$what
+sudo ln -s "$PWD/$what2$extension2" /usr/bin/$what2
 echo "done."
