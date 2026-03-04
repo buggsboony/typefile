@@ -27,3 +27,5 @@ function fn()
     console.log('test');
     console.warn(`big text`);
 }
+
+FIN

@@ -67,8 +67,10 @@ function getSeqOnOff($code)
     define("KEY_9", 10); //^
     define("KEY_0", 11); //@   
     define("KEY_MINUS", 12); //]
-
+    define("KEY_EQUAL", 13); //=
     define("KEY_E", 18); //e  
+    define("KEY_O", 24); //o
+    
     define("KEY_M", 50); //,
     define("KEY_COMMA", 51); //;
     define("KEY_SLASH", 53); 
@@ -80,33 +82,31 @@ function getSeqOnOff($code)
     define("VK_TAB",15);
     define("VK_RETURN",28);    
 
-
-
-
-            
-        
-        // ô
+   
+    
+    //Derniers bugs
+        // -
         // ç
-        // '
-        // .
-        // "
-        // '
-        
-        // =
-        
-        // }
-        
-        
-        // €
-        // £
+//         Oups, char '�' ord=195 not found in sequences 
+// [ydotool key ]
+// Oups, char '�' ord=169 not found in sequences 
 
 
     //2026-03-03 19:41:05 - Obtenir une séquence
 function getCharSeq($c)
 {
-    
+    $value = ord($c);
     $seq = "";
+    if($c=="ç")  {
+        echo "C Cédille!\r\n";
+        exit;
+        $seq = getSeqOnOff(KEY_9);   }
+    if($c=="'")  {$seq = getSeqOnOff(KEY_4);   }    
+    if($c==".")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_COMMA)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
+    if($c=="\"")  {$seq = getSeqOnOff(KEY_3);   }
+    if($c=="=")  {$seq = getSeqOnOff(KEY_EQUAL);   }
     if($c=="ù")  {$seq = getSeqOnOff(KEY_APOSTROPHE);   }
+     
     if($c=="%")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_RIGHTBRACE)." ".getSeqOff(KEY_SHIFT_LEFT);    }    
     
     if($c=="*")  {$seq = getSeqOnOff(KEY_BACKSLASH);    }
@@ -123,10 +123,13 @@ function getCharSeq($c)
     if($c=="£")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_RIGHTBRACE)." ".getSeqOff(KEY_SHIFT_LEFT);        }        
     if($c=="§")  {$seq = getSeqOn(KEY_SHIFT_LEFT)." ".getSeqOnOff(KEY_SLASH)." ".getSeqOff(KEY_SHIFT_LEFT);        }    
     
+
+    if($c=="ô")  {$seq = getCharSeq("^")." ".getSeqOnOff(KEY_O);   }
+
     if($c=="~") {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_2)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="#")  {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_3)." ".getSeqOff(KEY_RIGHTALT);         }
-    if($c=="{")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_4)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="(")  {$seq = getSeqOnOff(KEY_5);    }
+    if($c=="{")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_4)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="[")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_5)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="|")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_6)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="`")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_7)." ".getSeqOff(KEY_RIGHTALT);         }
@@ -134,6 +137,7 @@ function getCharSeq($c)
     if($c=="^")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_9)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c=="@")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_0)." ".getSeqOff(KEY_RIGHTALT);         }
     if($c==")")  {$seq = getSeqOnOff(KEY_MINUS);    }    
+    if($c=="}")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_EQUAL)." ".getSeqOff(KEY_RIGHTALT);    }
     if($c=="]")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_MINUS)." ".getSeqOff(KEY_RIGHTALT);     }
 
     if($c=="€")   {$seq = getSeqOn(KEY_RIGHTALT)." ".getSeqOnOff(KEY_E)." ".getSeqOff(KEY_RIGHTALT);         }
@@ -144,7 +148,7 @@ function getCharSeq($c)
     
     if( !$seq )
     {
-        echo "Oups, char '$c' not found in sequences \r\n";
+        echo "Oups, char '$c' ord=$value not found in sequences \r\n";
     }
     return $seq;
 }//getCharSeq
