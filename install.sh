@@ -35,6 +35,19 @@ extension2=.sh
 echo -e "${YELL}ydotool (supports both Wayland and X11) #check installed package , is package installed ? ${NC}\n"
 sudo pacman -S ydotool
 
+echo -e  "${YELL}IF ydotool was install, you might change layout by Installing ydotool-rebind for AZERTY ...${NC}\n"
+echo -e  "${VIOLET} 
+git clone https://github.com/david-vct/ydotool-rebind.git 
+cd ydotool-rebind
+sudo ./install.sh
+${NC}\n"
+
+echo "Press Enter to continue..." 
+read
+
+echo -e "${YELL}Install Zenity ??${NC}\n"
+sudo pacman -S zenity
+
 #pacman -Qi youtube-dl | grep -i version
 if [ $(pacman -Qi ydotool | grep -i version | wc -l) == 1 ]; then 
 echo "ydotool already installed OK"
